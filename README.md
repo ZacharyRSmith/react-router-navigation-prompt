@@ -10,6 +10,8 @@
 
 A replacement component for the react-router `<Prompt/>`. Allows for more flexible dialogs.
 
+IMPORTANT: Currently, this does not confirm navigation to another website.
+
 Motivation: https://github.com/ReactTraining/react-router/issues/4635
 
 Adapted from: https://gist.github.com/bummzack/a586533607ece482475e0c211790dd50
