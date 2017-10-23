@@ -83,7 +83,7 @@ class NavigationPrompt extends React.Component
   }
 
   render() {
-    if (!this.state.isActive) return null;
+    if (!this.state.isActive && !this.props.renderIfNotActive) return null;
     return (
       <div>
         {this.props.children({
