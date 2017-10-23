@@ -1872,14 +1872,14 @@ var NavigationPrompt = function (_React$Component) {
     _this.onCancel = _this.onCancel.bind(_this);
     _this.onConfirm = _this.onConfirm.bind(_this);
     _this.unblock = props.history.block(function (nextLocation, action) {
-      if (props.when) {
+      if (_this.props.when) {
         _this.setState({
           action: action,
           nextLocation: nextLocation,
           isActive: true
         });
       }
-      return !props.when;
+      return !_this.props.when;
     });
     _this.state = { action: null, nextLocation: null, isActive: false };
     return _this;
@@ -1942,7 +1942,7 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      if (!this.state.isActive) return null;
+      if (!this.state.isActive && !this.props.renderIfNotActive) return null;
       return _react2.default.createElement(
         'div',
         null,
