@@ -1920,8 +1920,8 @@ var NavigationPrompt = function (_React$Component) {
       this.unblock();
       if (typeof history[action] === 'function') {
         history[action](nextLocation.pathname);
-      } else if (action === 'pop') {
-        history.pop();
+      } else if (action === 'pop' && typeof history.goBack === 'function') {
+        history.goBack();
       } else {
         history.push(nextLocation.pathname);
       }
