@@ -27,14 +27,14 @@ class NavigationPrompt extends React.Component
     this.onCancel = this.onCancel.bind(this);
     this.onConfirm = this.onConfirm.bind(this);
     this.unblock = props.history.block((nextLocation, action) => {
-      if (props.when) {
+      if (this.props.when) {
         this.setState({
           action,
           nextLocation,
           isActive: true
         });
       }
-      return !props.when;
+      return !this.props.when;
     });
     this.state = {action: null, nextLocation: null, isActive: false};
   }
