@@ -1868,7 +1868,7 @@ var NavigationPrompt = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (NavigationPrompt.__proto__ || Object.getPrototypeOf(NavigationPrompt)).call(this, props));
 
-    _this.state = { action: null, nextLocation: null, isActive: false };
+    _this.onBeforeUnload = _this.onBeforeUnload.bind(_this);
     _this.onCancel = _this.onCancel.bind(_this);
     _this.onConfirm = _this.onConfirm.bind(_this);
     _this.unblock = props.history.block(function (nextLocation, action) {
@@ -1881,6 +1881,7 @@ var NavigationPrompt = function (_React$Component) {
       }
       return !props.when;
     });
+    _this.state = { action: null, nextLocation: null, isActive: false };
     return _this;
   }
 
@@ -1928,7 +1929,6 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'onBeforeUnload',
     value: function onBeforeUnload(e) {
-      console.log('this', this);
       if (!this.props.when) return;
       var msg = 'Do you want to leave this site?\n\nChanges you made may not be saved.';
       e.returnValue = msg;
