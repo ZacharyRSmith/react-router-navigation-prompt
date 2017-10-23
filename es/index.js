@@ -1885,9 +1885,15 @@ var NavigationPrompt = function (_React$Component) {
   }
 
   _createClass(NavigationPrompt, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener('beforeunload', this.onBeforeUnload);
+    }
+  }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       this.unblock();
+      window.removeEventListener('beforeunload', this.onBeforeUnload);
     }
   }, {
     key: 'onCancel',
@@ -1918,6 +1924,15 @@ var NavigationPrompt = function (_React$Component) {
       } else {
         history.push(nextLocation.pathname);
       }
+    }
+  }, {
+    key: 'onBeforeUnload',
+    value: function onBeforeUnload(e) {
+      console.log('this', this);
+      if (!this.props.when) return;
+      var msg = 'Do you want to leave this site?\n\nChanges you made may not be saved.';
+      e.returnValue = msg;
+      return msg;
     }
   }, {
     key: 'unblock',

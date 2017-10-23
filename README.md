@@ -10,7 +10,7 @@
 
 A replacement component for the react-router `<Prompt/>`. Allows for more flexible dialogs.
 
-IMPORTANT: Currently, this does not confirm navigation to another website.
+Note: When NavigationPrompt.props.when is truthy, then confirmation is requested when navigating away.  Usually, browsers handle the UX themselves, leading to vanilla alert boxes.  Also, many browsers require users to interact with your site before confirming navigation away.
 
 Motivation: https://github.com/ReactTraining/react-router/issues/4635
 

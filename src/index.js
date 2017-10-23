@@ -23,7 +23,7 @@ class NavigationPrompt extends React.Component
 {
   constructor(props) {
     super(props);
-    this.state = {action: null, nextLocation: null, isActive: false};
+    this.onBeforeUnload = this.onBeforeUnload.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.onConfirm = this.onConfirm.bind(this);
     this.unblock = props.history.block((nextLocation, action) => {
@@ -36,10 +36,16 @@ class NavigationPrompt extends React.Component
       }
       return !props.when;
     });
+    this.state = {action: null, nextLocation: null, isActive: false};
+  }
+
+  componentDidMount() {
+    window.addEventListener('beforeunload', this.onBeforeUnload);
   }
 
   componentWillUnmount() {
     this.unblock();
+    window.removeEventListener('beforeunload', this.onBeforeUnload);
   }
 
   onCancel() {
@@ -63,6 +69,13 @@ class NavigationPrompt extends React.Component
     } else {
       history.push(nextLocation.pathname);
     }
+  }
+
+  onBeforeUnload(e) {
+    if (!this.props.when) return;
+    const msg = 'Do you want to leave this site?\n\nChanges you made may not be saved.';
+    e.returnValue = msg;
+    return msg;
   }
 
   unblock() {
