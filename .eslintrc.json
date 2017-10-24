@@ -1,0 +1,21 @@
+{
+  "extends": "google",
+  "env": {
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "plugins": ["flowtype", "react"],
+  "rules": {
+    "comma-dangle": 0,
+    "max-len": 0,
+    "no-warning-comments": 1,
+    "require-jsdoc": 0,
+    "spaced-comment": 0
+  }
+}

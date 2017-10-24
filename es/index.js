@@ -1831,10 +1831,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(26);
 
-var _propTypes = __webpack_require__(2);
-
-var _propTypes2 = _interopRequireDefault(_propTypes);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1897,6 +1893,26 @@ var NavigationPrompt = function (_React$Component) {
       window.removeEventListener('beforeunload', this.onBeforeUnload);
     }
   }, {
+    key: 'navigateToNextLocation',
+    value: function navigateToNextLocation() {
+      var _state = this.state,
+          action = _state.action,
+          nextLocation = _state.nextLocation;
+
+      action = {
+        'POP': 'goBack',
+        'PUSH': 'push',
+        'REPLACE': 'replace'
+      }[action || 'PUSH'];
+      if (!nextLocation) nextLocation = { pathname: '/' };
+      var history = this.props.history;
+
+
+      this.unblock();
+      if (action === 'goBack') return void history.goBack();
+      history[action](nextLocation.pathname);
+    }
+  }, {
     key: 'onCancel',
     value: function onCancel() {
       this.setState({ action: null, nextLocation: null, isActive: false });
@@ -1905,26 +1921,6 @@ var NavigationPrompt = function (_React$Component) {
     key: 'onConfirm',
     value: function onConfirm() {
       this.navigateToNextLocation();
-    }
-  }, {
-    key: 'navigateToNextLocation',
-    value: function navigateToNextLocation() {
-      var _state = this.state,
-          action = _state.action,
-          nextLocation = _state.nextLocation;
-
-      action = action.toLowerCase();
-      var history = this.props.history;
-
-
-      this.unblock();
-      if (typeof history[action] === 'function') {
-        history[action](nextLocation.pathname);
-      } else if (action === 'pop' && typeof history.goBack === 'function') {
-        history.goBack();
-      } else {
-        history.push(nextLocation.pathname);
-      }
     }
   }, {
     key: 'onBeforeUnload',
@@ -1957,11 +1953,6 @@ var NavigationPrompt = function (_React$Component) {
 
   return NavigationPrompt;
 }(_react2.default.Component);
-
-NavigationPrompt.propTypes = {
-  when: _propTypes2.default.bool.isRequired,
-  children: _propTypes2.default.func.isRequired
-};
 
 exports.default = (0, _reactRouterDom.withRouter)(NavigationPrompt);
 

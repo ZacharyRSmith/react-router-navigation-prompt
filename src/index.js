@@ -1,6 +1,19 @@
+/* @flow */
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import PropTypes from 'prop-types';
+import type {HistoryAction, Location, RouterHistory} from 'react-router-dom';
+
+declare type PropsT = {
+  children: (data: {isActive: bool, onCancel: Function, onConfirm: Function}) => React$Element<*>,
+  history: RouterHistory,
+  renderIfNotActive: bool,
+  when: bool
+};
+declare type StateT = {
+  action: ?HistoryAction,
+  nextLocation: ?Location,
+  isActive: bool
+};
 
 /**
  * A replacement component for the react-router `Prompt`.
@@ -19,14 +32,13 @@ import PropTypes from 'prop-types';
  *   )}
  * </NavigationPrompt>
  */
-class NavigationPrompt extends React.Component
-{
+class NavigationPrompt extends React.Component<PropsT, StateT> {
   constructor(props) {
     super(props);
-    this.onBeforeUnload = this.onBeforeUnload.bind(this);
-    this.onCancel = this.onCancel.bind(this);
-    this.onConfirm = this.onConfirm.bind(this);
-    this.unblock = props.history.block((nextLocation, action) => {
+    (this:Object).onBeforeUnload = this.onBeforeUnload.bind(this);
+    (this:Object).onCancel = this.onCancel.bind(this);
+    (this:Object).onConfirm = this.onConfirm.bind(this);
+    (this:Object).unblock = props.history.block((nextLocation, action) => {
       if (this.props.when) {
         this.setState({
           action,
@@ -48,27 +60,27 @@ class NavigationPrompt extends React.Component
     window.removeEventListener('beforeunload', this.onBeforeUnload);
   }
 
+  navigateToNextLocation() {
+    let {action, nextLocation} = this.state;
+    action = {
+      'POP': 'goBack',
+      'PUSH': 'push',
+      'REPLACE': 'replace'
+    }[action || 'PUSH'];
+    if (!nextLocation) nextLocation = {pathname: '/'};
+    const {history} = this.props;
+
+    this.unblock();
+    if (action === 'goBack') return void history.goBack();
+    history[action](nextLocation.pathname);
+  }
+
   onCancel() {
     this.setState({action: null, nextLocation: null, isActive: false});
   }
 
   onConfirm() {
     this.navigateToNextLocation();
-  }
-
-  navigateToNextLocation() {
-    let {action, nextLocation} = this.state;
-    action = action.toLowerCase();
-    const {history} = this.props;
-
-    this.unblock();
-    if (typeof history[action] === 'function') {
-      history[action](nextLocation.pathname);
-    } else if (action === 'pop' && typeof history.goBack === 'function') {
-      history.goBack();
-    } else {
-      history.push(nextLocation.pathname);
-    }
   }
 
   onBeforeUnload(e) {
@@ -95,10 +107,5 @@ class NavigationPrompt extends React.Component
     );
   }
 }
-
-NavigationPrompt.propTypes = {
-  when: PropTypes.bool.isRequired,
-  children: PropTypes.func.isRequired,
-};
 
 export default withRouter(NavigationPrompt);
