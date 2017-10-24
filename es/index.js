@@ -1823,6 +1823,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(1);
@@ -1839,6 +1841,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var initState = { action: null, isActive: false, nextLocation: null };
 /**
  * A replacement component for the react-router `Prompt`.
  * Allows for more flexible dialogs.
@@ -1856,6 +1859,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  *   )}
  * </NavigationPrompt>
  */
+
 var NavigationPrompt = function (_React$Component) {
   _inherits(NavigationPrompt, _React$Component);
 
@@ -1864,20 +1868,12 @@ var NavigationPrompt = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (NavigationPrompt.__proto__ || Object.getPrototypeOf(NavigationPrompt)).call(this, props));
 
+    _this.block = _this.block.bind(_this);
     _this.onBeforeUnload = _this.onBeforeUnload.bind(_this);
     _this.onCancel = _this.onCancel.bind(_this);
     _this.onConfirm = _this.onConfirm.bind(_this);
-    _this.unblock = props.history.block(function (nextLocation, action) {
-      if (_this.props.when) {
-        _this.setState({
-          action: action,
-          nextLocation: nextLocation,
-          isActive: true
-        });
-      }
-      return !_this.props.when;
-    });
-    _this.state = { action: null, nextLocation: null, isActive: false };
+
+    _this.state = _extends({}, initState, { unblock: props.history.block(_this.block) });
     return _this;
   }
 
@@ -1889,12 +1885,24 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      this.unblock();
+      this.state.unblock();
       window.removeEventListener('beforeunload', this.onBeforeUnload);
     }
   }, {
+    key: 'block',
+    value: function block(nextLocation, action) {
+      if (this.props.when) {
+        this.setState({
+          action: action,
+          nextLocation: nextLocation,
+          isActive: true
+        });
+      }
+      return !this.props.when;
+    }
+  }, {
     key: 'navigateToNextLocation',
-    value: function navigateToNextLocation() {
+    value: function navigateToNextLocation(cb) {
       var _state = this.state,
           action = _state.action,
           nextLocation = _state.nextLocation;
@@ -1908,19 +1916,37 @@ var NavigationPrompt = function (_React$Component) {
       var history = this.props.history;
 
 
-      this.unblock();
-      if (action === 'goBack') return void history.goBack();
-      history[action](nextLocation.pathname);
+      this.state.unblock();
+      if (action === 'goBack') {
+        history.goBack();
+      } else {
+        history[action](nextLocation.pathname);
+      }
+      this.setState(_extends({}, initState, {
+        unblock: this.props.history.block(this.block)
+      }), cb); // FIXME?  Does history.listen need to be used instead, for async?
     }
   }, {
     key: 'onCancel',
     value: function onCancel() {
-      this.setState({ action: null, nextLocation: null, isActive: false });
+      var _this2 = this;
+
+      (this.props.beforeCancel || function (cb) {
+        cb();
+      })(function () {
+        _this2.setState(_extends({}, initState), _this2.props.afterCancel);
+      });
     }
   }, {
     key: 'onConfirm',
     value: function onConfirm() {
-      this.navigateToNextLocation();
+      var _this3 = this;
+
+      (this.props.beforeConfirm || function (cb) {
+        cb();
+      })(function () {
+        _this3.navigateToNextLocation(_this3.props.afterConfirm);
+      });
     }
   }, {
     key: 'onBeforeUnload',
@@ -1929,11 +1955,6 @@ var NavigationPrompt = function (_React$Component) {
       var msg = 'Do you want to leave this site?\n\nChanges you made may not be saved.';
       e.returnValue = msg;
       return msg;
-    }
-  }, {
-    key: 'unblock',
-    value: function unblock() {
-      // Init in constructor().
     }
   }, {
     key: 'render',

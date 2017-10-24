@@ -4,6 +4,10 @@ import {withRouter} from 'react-router-dom';
 import type {HistoryAction, Location, RouterHistory} from 'react-router-dom';
 
 declare type PropsT = {
+  afterCancel?: Function,
+  afterConfirm?: Function,
+  beforeCancel?: Function,
+  beforeConfirm?: Function,
   children: (data: {isActive: bool, onCancel: Function, onConfirm: Function}) => React$Element<*>,
   history: RouterHistory,
   renderIfNotActive: bool,
@@ -12,9 +16,11 @@ declare type PropsT = {
 declare type StateT = {
   action: ?HistoryAction,
   nextLocation: ?Location,
-  isActive: bool
+  isActive: bool,
+  unblock: Function
 };
 
+const initState = {action: null, isActive: false, nextLocation: null};
 /**
  * A replacement component for the react-router `Prompt`.
  * Allows for more flexible dialogs.
@@ -35,20 +41,13 @@ declare type StateT = {
 class NavigationPrompt extends React.Component<PropsT, StateT> {
   constructor(props) {
     super(props);
+
+    (this:Object).block = this.block.bind(this);
     (this:Object).onBeforeUnload = this.onBeforeUnload.bind(this);
     (this:Object).onCancel = this.onCancel.bind(this);
     (this:Object).onConfirm = this.onConfirm.bind(this);
-    (this:Object).unblock = props.history.block((nextLocation, action) => {
-      if (this.props.when) {
-        this.setState({
-          action,
-          nextLocation,
-          isActive: true
-        });
-      }
-      return !this.props.when;
-    });
-    this.state = {action: null, nextLocation: null, isActive: false};
+
+    this.state = {...initState, unblock: props.history.block(this.block)};
   }
 
   componentDidMount() {
@@ -56,11 +55,22 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   componentWillUnmount() {
-    this.unblock();
+    this.state.unblock();
     window.removeEventListener('beforeunload', this.onBeforeUnload);
   }
 
-  navigateToNextLocation() {
+  block(nextLocation, action) {
+    if (this.props.when) {
+      this.setState({
+        action,
+        nextLocation,
+        isActive: true
+      });
+    }
+    return !this.props.when;
+  }
+
+  navigateToNextLocation(cb) {
     let {action, nextLocation} = this.state;
     action = {
       'POP': 'goBack',
@@ -70,17 +80,32 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     if (!nextLocation) nextLocation = {pathname: '/'};
     const {history} = this.props;
 
-    this.unblock();
-    if (action === 'goBack') return void history.goBack();
-    history[action](nextLocation.pathname);
+    this.state.unblock();
+    if (action === 'goBack') {
+      history.goBack();
+    } else {
+      history[action](nextLocation.pathname);
+    }
+    this.setState({
+      ...initState,
+      unblock: this.props.history.block(this.block)
+    }, cb); // FIXME?  Does history.listen need to be used instead, for async?
   }
 
   onCancel() {
-    this.setState({action: null, nextLocation: null, isActive: false});
+    (this.props.beforeCancel || ((cb) => {
+     cb();
+    }))(() => {
+      this.setState({...initState}, this.props.afterCancel);
+    });
   }
 
   onConfirm() {
-    this.navigateToNextLocation();
+    (this.props.beforeConfirm || ((cb) => {
+     cb();
+    }))(() => {
+      this.navigateToNextLocation(this.props.afterConfirm);
+    });
   }
 
   onBeforeUnload(e) {
@@ -88,10 +113,6 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     const msg = 'Do you want to leave this site?\n\nChanges you made may not be saved.';
     e.returnValue = msg;
     return msg;
-  }
-
-  unblock() {
-    // Init in constructor().
   }
 
   render() {
