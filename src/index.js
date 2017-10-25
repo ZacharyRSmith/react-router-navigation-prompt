@@ -1,7 +1,7 @@
 /* @flow */
 import React from 'react';
 import {withRouter} from 'react-router-dom';
-import type {HistoryAction, Location, RouterHistory} from 'react-router-dom';
+import type {HistoryAction, Location, Match, RouterHistory} from 'react-router-dom';
 
 declare type PropsT = {
   afterCancel?: Function,
@@ -9,9 +9,11 @@ declare type PropsT = {
   beforeCancel?: Function,
   beforeConfirm?: Function,
   children: (data: {isActive: bool, onCancel: Function, onConfirm: Function}) => React$Element<*>,
+  match: Match,
   history: RouterHistory,
+  location: Location,
   renderIfNotActive: bool,
-  when: bool
+  when: bool | (Location, ?Location) => bool
 };
 declare type StateT = {
   action: ?HistoryAction,
@@ -46,6 +48,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     (this:Object).onBeforeUnload = this.onBeforeUnload.bind(this);
     (this:Object).onCancel = this.onCancel.bind(this);
     (this:Object).onConfirm = this.onConfirm.bind(this);
+    (this:Object).when = this.when.bind(this);
 
     this.state = {...initState, unblock: props.history.block(this.block)};
   }
@@ -60,14 +63,14 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   block(nextLocation, action) {
-    if (this.props.when) {
+    if (this.when(nextLocation)) {
       this.setState({
         action,
         nextLocation,
         isActive: true
       });
     }
-    return !this.props.when;
+    return !this.when(nextLocation);
   }
 
   navigateToNextLocation(cb) {
@@ -109,10 +112,18 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   onBeforeUnload(e) {
-    if (!this.props.when) return;
+    if (!this.when()) return;
     const msg = 'Do you want to leave this site?\n\nChanges you made may not be saved.';
     e.returnValue = msg;
     return msg;
+  }
+
+  when(nextLocation?: Location) {
+    if (typeof this.props.when === 'function') {
+      return this.props.when(this.props.location, nextLocation);
+    } else {
+      return this.props.when;
+    }
   }
 
   render() {

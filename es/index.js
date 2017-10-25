@@ -1872,6 +1872,7 @@ var NavigationPrompt = function (_React$Component) {
     _this.onBeforeUnload = _this.onBeforeUnload.bind(_this);
     _this.onCancel = _this.onCancel.bind(_this);
     _this.onConfirm = _this.onConfirm.bind(_this);
+    _this.when = _this.when.bind(_this);
 
     _this.state = _extends({}, initState, { unblock: props.history.block(_this.block) });
     return _this;
@@ -1891,14 +1892,14 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'block',
     value: function block(nextLocation, action) {
-      if (this.props.when) {
+      if (this.when(nextLocation)) {
         this.setState({
           action: action,
           nextLocation: nextLocation,
           isActive: true
         });
       }
-      return !this.props.when;
+      return !this.when(nextLocation);
     }
   }, {
     key: 'navigateToNextLocation',
@@ -1951,10 +1952,19 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'onBeforeUnload',
     value: function onBeforeUnload(e) {
-      if (!this.props.when) return;
+      if (!this.when()) return;
       var msg = 'Do you want to leave this site?\n\nChanges you made may not be saved.';
       e.returnValue = msg;
       return msg;
+    }
+  }, {
+    key: 'when',
+    value: function when(nextLocation) {
+      if (typeof this.props.when === 'function') {
+        return this.props.when(this.props.location, nextLocation);
+      } else {
+        return this.props.when;
+      }
     }
   }, {
     key: 'render',
