@@ -1909,7 +1909,7 @@ var NavigationPrompt = function (_React$Component) {
           nextLocation = _state.nextLocation;
 
       action = {
-        'POP': 'goBack',
+        'POP': 'push',
         'PUSH': 'push',
         'REPLACE': 'replace'
       }[action || 'PUSH'];
@@ -1918,11 +1918,7 @@ var NavigationPrompt = function (_React$Component) {
 
 
       this.state.unblock();
-      if (action === 'goBack') {
-        history.goBack();
-      } else {
-        history[action](nextLocation.pathname);
-      }
+      history[action](nextLocation.pathname);
       this.setState(_extends({}, initState, {
         unblock: this.props.history.block(this.block)
       }), cb); // FIXME?  Does history.listen need to be used instead, for async?

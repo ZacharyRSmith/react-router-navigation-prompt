@@ -76,7 +76,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   navigateToNextLocation(cb) {
     let {action, nextLocation} = this.state;
     action = {
-      'POP': 'goBack',
+      'POP': 'push',
       'PUSH': 'push',
       'REPLACE': 'replace'
     }[action || 'PUSH'];
@@ -84,11 +84,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     const {history} = this.props;
 
     this.state.unblock();
-    if (action === 'goBack') {
-      history.goBack();
-    } else {
-      history[action](nextLocation.pathname);
-    }
+    history[action](nextLocation.pathname);
     this.setState({
       ...initState,
       unblock: this.props.history.block(this.block)
