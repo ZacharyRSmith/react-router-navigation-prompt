@@ -31,8 +31,8 @@
   "main": "es/index.js",
   "module": "es/index.js",
   "homepage": "https://github.com/ZacharyRSmith/react-router-navigation-prompt#readme",
-  "dependencies": {
-    "react": "^16.0.0",
+  "peerDependencies": {
+    "react": ">= 15",
     "react-router-dom": "^4.2.2"
   },
   "devDependencies": {
