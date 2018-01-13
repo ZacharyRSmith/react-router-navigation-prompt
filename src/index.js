@@ -88,14 +88,14 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     this.setState({
       ...initState,
       unblock: this.props.history.block(this.block)
-    }, cb); // FIXME?  Does history.listen need to be used instead, for async?
+    }, (cb || (() => {}) )()); // FIXME?  Does history.listen need to be used instead, for async?
   }
 
   onCancel() {
     (this.props.beforeCancel || ((cb) => {
      cb();
     }))(() => {
-      this.setState({...initState}, this.props.afterCancel);
+      this.setState({...initState}, (this.props.afterCancel || (() => {}) )());
     });
   }
 

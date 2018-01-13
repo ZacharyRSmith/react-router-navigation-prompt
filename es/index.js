@@ -173,7 +173,7 @@ var NavigationPrompt = function (_React$Component) {
       history[action](nextLocation.pathname);
       this.setState(_extends({}, initState, {
         unblock: this.props.history.block(this.block)
-      }), cb); // FIXME?  Does history.listen need to be used instead, for async?
+      }), (cb || function () {})()); // FIXME?  Does history.listen need to be used instead, for async?
     }
   }, {
     key: 'onCancel',
@@ -183,7 +183,7 @@ var NavigationPrompt = function (_React$Component) {
       (this.props.beforeCancel || function (cb) {
         cb();
       })(function () {
-        _this2.setState(_extends({}, initState), _this2.props.afterCancel);
+        _this2.setState(_extends({}, initState), (_this2.props.afterCancel || function () {})());
       });
     }
   }, {
