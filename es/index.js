@@ -93,7 +93,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var initState = { action: null, isActive: false, nextLocation: null };
+var initState = {
+  action: null,
+  isActive: false,
+  nextLocation: null
+};
+
 /**
  * A replacement component for the react-router `Prompt`.
  * Allows for more flexible dialogs.
@@ -111,6 +116,9 @@ var initState = { action: null, isActive: false, nextLocation: null };
  *   )}
  * </NavigationPrompt>
  */
+// `prevUserAction` weirdness because setState()'s callback is not getting invoked.
+// See: See https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/9
+var prevUserAction = '';
 
 var NavigationPrompt = function (_React$Component) {
   _inherits(NavigationPrompt, _React$Component);
@@ -136,8 +144,22 @@ var NavigationPrompt = function (_React$Component) {
       window.addEventListener('beforeunload', this.onBeforeUnload);
     }
   }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevUserAction === 'CANCEL' && typeof this.props.afterCancel === 'function') {
+        this.props.afterCancel();
+      } else if (prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
+        this.props.afterConfirm();
+      }
+      prevUserAction = '';
+    }
+  }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
+      if (prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
+        prevUserAction = '';
+        this.props.afterConfirm();
+      }
       this.state.unblock();
       window.removeEventListener('beforeunload', this.onBeforeUnload);
     }
@@ -171,9 +193,10 @@ var NavigationPrompt = function (_React$Component) {
 
       this.state.unblock();
       history[action](nextLocation.pathname);
+      prevUserAction = 'CONFIRM';
       this.setState(_extends({}, initState, {
         unblock: this.props.history.block(this.block)
-      }), cb); // FIXME?  Does history.listen need to be used instead, for async?
+      })); // FIXME?  Does history.listen need to be used instead, for async?
     }
   }, {
     key: 'onCancel',
@@ -183,7 +206,8 @@ var NavigationPrompt = function (_React$Component) {
       (this.props.beforeCancel || function (cb) {
         cb();
       })(function () {
-        _this2.setState(_extends({}, initState), _this2.props.afterCancel);
+        prevUserAction = 'CANCEL';
+        _this2.setState(_extends({}, initState));
       });
     }
   }, {
