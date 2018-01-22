@@ -22,7 +22,12 @@ declare type StateT = {
   unblock: Function
 };
 
-const initState = {action: null, isActive: false, nextLocation: null};
+const initState = {
+  action: null,
+  isActive: false,
+  nextLocation: null
+};
+
 /**
  * A replacement component for the react-router `Prompt`.
  * Allows for more flexible dialogs.
@@ -40,6 +45,9 @@ const initState = {action: null, isActive: false, nextLocation: null};
  *   )}
  * </NavigationPrompt>
  */
+// `prevUserAction` weirdness because setState()'s callback is not getting invoked.
+// See: See https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/9
+let prevUserAction = '';
 class NavigationPrompt extends React.Component<PropsT, StateT> {
   constructor(props) {
     super(props);
@@ -57,7 +65,20 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     window.addEventListener('beforeunload', this.onBeforeUnload);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevUserAction === 'CANCEL' && typeof this.props.afterCancel === 'function') {
+      this.props.afterCancel();
+    } else if (prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
+      this.props.afterConfirm();
+    }
+    prevUserAction = '';
+  }
+
   componentWillUnmount() {
+    if (prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
+      prevUserAction = '';
+      this.props.afterConfirm();
+    }
     this.state.unblock();
     window.removeEventListener('beforeunload', this.onBeforeUnload);
   }
@@ -85,17 +106,19 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
 
     this.state.unblock();
     history[action](nextLocation.pathname);
+    prevUserAction = 'CONFIRM';
     this.setState({
       ...initState,
       unblock: this.props.history.block(this.block)
-    }, cb); // FIXME?  Does history.listen need to be used instead, for async?
+    }); // FIXME?  Does history.listen need to be used instead, for async?
   }
 
   onCancel() {
     (this.props.beforeCancel || ((cb) => {
      cb();
     }))(() => {
-      this.setState({...initState}, this.props.afterCancel);
+      prevUserAction = 'CANCEL';
+      this.setState({...initState});
     });
   }
 
