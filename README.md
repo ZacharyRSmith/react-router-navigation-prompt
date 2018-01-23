@@ -27,6 +27,10 @@ Adapted from: https://gist.github.com/bummzack/a586533607ece482475e0c211790dd50
 #### Simplest example:
 
 ```javascript
+import NavigationPrompt from 'react-router-navigation-prompt';
+
+import ConfirmNavigationModal from './your-own-code';
+
 <NavigationPrompt when={this.state.shouldConfirmNavigation}>
   {({onConfirm, onCancel}) => (
     <ConfirmNavigationModal when={true} onCancel={onCancel} onConfirm={onConfirm}/>
@@ -37,6 +41,9 @@ Adapted from: https://gist.github.com/bummzack/a586533607ece482475e0c211790dd50
 #### Complex example:
 
 ```javascript
+import NavigationPrompt from 'react-router-navigation-prompt';
+
+import Modal from './your-own-code';
 
 <NavigationPrompt
   beforeConfirm={this.cleanup}
