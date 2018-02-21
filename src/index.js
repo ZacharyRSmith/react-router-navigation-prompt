@@ -105,6 +105,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     const {history} = this.props;
 
     this.state.unblock();
+    // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
     history[action](nextLocation);
     prevUserAction = 'CONFIRM';
     this.setState({

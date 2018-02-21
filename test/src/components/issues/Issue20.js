@@ -18,8 +18,8 @@ class Issue20 extends Component {
                 </NavigationPrompt>
                 <h1>Issue 20</h1>
                 <ul>
-                    <li><Link to="/issues/20#main">without search</Link></li>
-                    <li><Link to="/issues/20#main?lang=es">con busca</Link></li>
+                    <li><Link to="/issues/20#main" replace>without search</Link></li>
+                    <li><Link to="/issues/20#main?lang=es" replace>con busca</Link></li>
                 </ul>
                 <Switch>
                     <Route path="/issues/20#main" render={() => (
