@@ -73,3 +73,14 @@ test('afterConfirm is callable (even when NavigationPrompt is unmounted) - (gh i
   // assert afterConfirm was called
   await t.expect(Selector('.was-after-confirm-called').textContent).eql('true');
 });
+
+test('search is updated when navigation is confirmed - (gh issue #20)', async t => {
+  await t.click(getLink('/issues'))
+    .click(getLink('/issues/20'))
+    .click(getLink('/issues/20#main'))
+    .click(navConfirm);
+  await assertPath({ t, path: '/issues/20#main'})
+  await t.click(getLink('/issues/20#main?lang=es'))
+    .click(navConfirm);
+  await assertPath({ t, path: '/issues/20#main?lang=es' })
+});

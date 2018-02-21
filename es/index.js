@@ -192,7 +192,7 @@ var NavigationPrompt = function (_React$Component) {
 
 
       this.state.unblock();
-      history[action](nextLocation.pathname);
+      history[action](nextLocation);
       prevUserAction = 'CONFIRM';
       this.setState(_extends({}, initState, {
         unblock: this.props.history.block(this.block)
