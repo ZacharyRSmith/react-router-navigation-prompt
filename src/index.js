@@ -105,7 +105,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     const {history} = this.props;
 
     this.state.unblock();
-    history[action](nextLocation.pathname);
+    history[action](nextLocation);
     prevUserAction = 'CONFIRM';
     this.setState({
       ...initState,
