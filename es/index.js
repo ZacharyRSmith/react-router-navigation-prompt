@@ -116,17 +116,21 @@ var initState = {
  *   )}
  * </NavigationPrompt>
  */
-// `prevUserAction` weirdness because setState()'s callback is not getting invoked.
-// See: See https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/9
-var prevUserAction = '';
 
 var NavigationPrompt = function (_React$Component) {
   _inherits(NavigationPrompt, _React$Component);
 
+  /*:: _prevUserAction: string; */
+
   function NavigationPrompt(props) {
     _classCallCheck(this, NavigationPrompt);
 
+    // `_prevUserAction` weirdness because setState()'s callback is not getting invoked.
+    // See: See https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/9
+    // I don't like making this an instance var,
     var _this = _possibleConstructorReturn(this, (NavigationPrompt.__proto__ || Object.getPrototypeOf(NavigationPrompt)).call(this, props));
+
+    _this._prevUserAction = '';
 
     _this.block = _this.block.bind(_this);
     _this.onBeforeUnload = _this.onBeforeUnload.bind(_this);
@@ -146,18 +150,18 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
-      if (prevUserAction === 'CANCEL' && typeof this.props.afterCancel === 'function') {
+      if (this._prevUserAction === 'CANCEL' && typeof this.props.afterCancel === 'function') {
         this.props.afterCancel();
-      } else if (prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
+      } else if (this._prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
         this.props.afterConfirm();
       }
-      prevUserAction = '';
+      this._prevUserAction = '';
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      if (prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
-        prevUserAction = '';
+      if (this._prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
+        this._prevUserAction = '';
         this.props.afterConfirm();
       }
       this.state.unblock();
@@ -192,8 +196,9 @@ var NavigationPrompt = function (_React$Component) {
 
 
       this.state.unblock();
+      // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
       history[action](nextLocation);
-      prevUserAction = 'CONFIRM';
+      this._prevUserAction = 'CONFIRM';
       this.setState(_extends({}, initState, {
         unblock: this.props.history.block(this.block)
       })); // FIXME?  Does history.listen need to be used instead, for async?
@@ -206,7 +211,7 @@ var NavigationPrompt = function (_React$Component) {
       (this.props.beforeCancel || function (cb) {
         cb();
       })(function () {
-        prevUserAction = 'CANCEL';
+        _this2._prevUserAction = 'CANCEL';
         _this2.setState(_extends({}, initState));
       });
     }
