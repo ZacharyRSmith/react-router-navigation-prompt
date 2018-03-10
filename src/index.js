@@ -45,12 +45,16 @@ const initState = {
  *   )}
  * </NavigationPrompt>
  */
-// `prevUserAction` weirdness because setState()'s callback is not getting invoked.
-// See: See https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/9
-let prevUserAction = '';
 class NavigationPrompt extends React.Component<PropsT, StateT> {
+  /*:: _prevUserAction: string; */
+
   constructor(props) {
     super(props);
+
+    // `_prevUserAction` weirdness because setState()'s callback is not getting invoked.
+    // See: See https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/9
+    // I don't like making this an instance var,
+    this._prevUserAction = '';
 
     (this:Object).block = this.block.bind(this);
     (this:Object).onBeforeUnload = this.onBeforeUnload.bind(this);
@@ -66,17 +70,17 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevUserAction === 'CANCEL' && typeof this.props.afterCancel === 'function') {
+    if (this._prevUserAction === 'CANCEL' && typeof this.props.afterCancel === 'function') {
       this.props.afterCancel();
-    } else if (prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
+    } else if (this._prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
       this.props.afterConfirm();
     }
-    prevUserAction = '';
+    this._prevUserAction = '';
   }
 
   componentWillUnmount() {
-    if (prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
-      prevUserAction = '';
+    if (this._prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
+      this._prevUserAction = '';
       this.props.afterConfirm();
     }
     this.state.unblock();
@@ -105,8 +109,9 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     const {history} = this.props;
 
     this.state.unblock();
-    history[action](nextLocation.pathname);
-    prevUserAction = 'CONFIRM';
+    // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
+    history[action](nextLocation);
+    this._prevUserAction = 'CONFIRM';
     this.setState({
       ...initState,
       unblock: this.props.history.block(this.block)
@@ -117,7 +122,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     (this.props.beforeCancel || ((cb) => {
      cb();
     }))(() => {
-      prevUserAction = 'CANCEL';
+      this._prevUserAction = 'CANCEL';
       this.setState({...initState});
     });
   }
