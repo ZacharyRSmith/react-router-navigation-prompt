@@ -170,14 +170,15 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'block',
     value: function block(nextLocation, action) {
-      if (this.when(nextLocation)) {
+      var result = this.when(nextLocation);
+      if (result) {
         this.setState({
           action: action,
           nextLocation: nextLocation,
           isActive: true
         });
       }
-      return !this.when(nextLocation);
+      return !result;
     }
   }, {
     key: 'navigateToNextLocation',
