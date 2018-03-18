@@ -88,14 +88,15 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   block(nextLocation, action) {
-    if (this.when(nextLocation)) {
+    const result = this.when(nextLocation);
+    if (result) {
       this.setState({
         action,
         nextLocation,
         isActive: true
       });
     }
-    return !this.when(nextLocation);
+    return !result;
   }
 
   navigateToNextLocation(cb) {
