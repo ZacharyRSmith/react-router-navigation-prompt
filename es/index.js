@@ -145,7 +145,9 @@ var NavigationPrompt = function (_React$Component) {
   _createClass(NavigationPrompt, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      window.addEventListener('beforeunload', this.onBeforeUnload);
+      if (!this.props.disableNative) {
+        window.addEventListener('beforeunload', this.onBeforeUnload);
+      }
     }
   }, {
     key: 'componentDidUpdate',
@@ -165,7 +167,9 @@ var NavigationPrompt = function (_React$Component) {
         this.props.afterConfirm();
       }
       this.state.unblock();
-      window.removeEventListener('beforeunload', this.onBeforeUnload);
+      if (!this.props.disableNative) {
+        window.removeEventListener('beforeunload', this.onBeforeUnload);
+      }
     }
   }, {
     key: 'block',
