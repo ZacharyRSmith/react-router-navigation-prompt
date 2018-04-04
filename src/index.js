@@ -13,7 +13,8 @@ declare type PropsT = {
   history: RouterHistory,
   location: Location,
   renderIfNotActive: bool,
-  when: bool | (Location, ?Location) => bool
+  when: bool | (Location, ?Location) => bool,
+  disableNative: bool,
 };
 declare type StateT = {
   action: ?HistoryAction,
@@ -66,7 +67,9 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   componentDidMount() {
-    window.addEventListener('beforeunload', this.onBeforeUnload);
+    if (!this.props.disableNative) {
+      window.addEventListener('beforeunload', this.onBeforeUnload);
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -84,7 +87,9 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
       this.props.afterConfirm();
     }
     this.state.unblock();
-    window.removeEventListener('beforeunload', this.onBeforeUnload);
+    if (!this.props.disableNative) {
+      window.removeEventListener('beforeunload', this.onBeforeUnload);
+    }
   }
 
   block(nextLocation, action) {
