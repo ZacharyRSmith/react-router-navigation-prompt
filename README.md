@@ -81,6 +81,7 @@ import Modal from './your-own-code';
   * children: (data: {isActive: bool, onCancel: Function, onConfirm: Function}) => React$Element<*>,
   * renderIfNotActive: bool,
   * when: bool | (Location, ?Location) => bool,
+  * disableNative: bool,
   // Added by react-router:
   * match: Match,
   * history: RouterHistory,
