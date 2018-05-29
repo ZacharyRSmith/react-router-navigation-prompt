@@ -50,7 +50,7 @@ import Modal from './your-own-code';
   // Children will be rendered even if props.when is falsey and isActive is false:
   renderIfNotActive={true}
   // Confirm navigation if going to a path that does not start with current path:
-  when={(crntLocation, nextLocation) => !nextLocation.pathname.startsWith(crntLocation.pathname)}
+  when={(crntLocation, nextLocation) => !nextLocation || !nextLocation.pathname.startsWith(crntLocation.pathname)}
 >
   {({isActive, onCancel, onConfirm}) => {
     if (isActive) {
