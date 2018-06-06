@@ -113,7 +113,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   navigateToNextLocation(cb) {
     let {action, nextLocation} = this.state;
     action = {
-      'POP': 'push',
+      'POP': 'goBack',
       'PUSH': 'push',
       'REPLACE': 'replace'
     }[action || 'PUSH'];
@@ -121,6 +121,23 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     const {history} = this.props;
 
     this.state.unblock();
+
+    if (action === 'goBack') {
+      history.goBack();
+      this._prevUserAction = 'CONFIRM';
+      // This helps when using in goBack
+      window.setTimeout(() => {
+        // There is a change that component has been unmounted after navigation
+        if (this.isMounted) {
+          this.setState({
+            ...initState,
+            unblock: this.props.history.block(this.block)
+          }); // FIXME?  Does history.listen need to be used instead, for async?
+        }
+      }, 0)
+      return
+    }
+
     // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
     history[action](nextLocation); // could unmount at this point
     this._prevUserAction = 'CONFIRM';
