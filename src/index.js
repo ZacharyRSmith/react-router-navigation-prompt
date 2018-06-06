@@ -90,6 +90,8 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     if (!this.props.disableNative) {
       window.removeEventListener('beforeunload', this.onBeforeUnload);
     }
+    
+    this.isUnmounted = true
   }
 
   block(nextLocation, action) {
@@ -107,7 +109,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   navigateToNextLocation(cb) {
     let {action, nextLocation} = this.state;
     action = {
-      'POP': 'push',
+      'POP': 'goBack',
       'PUSH': 'push',
       'REPLACE': 'replace'
     }[action || 'PUSH'];
@@ -116,12 +118,25 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
 
     this.state.unblock();
     // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
-    history[action](nextLocation);
+    
+    if (action === 'goBack') {
+      history.goBack();
+    } else {
+      history[action](nextLocation);
+    }
+
     this._prevUserAction = 'CONFIRM';
-    this.setState({
-      ...initState,
-      unblock: this.props.history.block(this.block)
-    }); // FIXME?  Does history.listen need to be used instead, for async?
+    
+    // This helps when using in goBack
+    window.setTimeout(() => {
+      // There is a change that component has been unmounted after navigation
+      if (!this.isUnmounted) {
+        this.setState({
+          ...initState,
+          unblock: this.props.history.block(this.block)
+        }); // FIXME?  Does history.listen need to be used instead, for async?
+      }
+    }, 0)
   }
 
   onCancel() {
