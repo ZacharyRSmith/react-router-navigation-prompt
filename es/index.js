@@ -227,7 +227,7 @@ var NavigationPrompt = function (_React$Component) {
               unblock: _this2.props.history.block(_this2.block)
             }));
           }
-        }, 0);
+        }, 25);
       }
 
       // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
