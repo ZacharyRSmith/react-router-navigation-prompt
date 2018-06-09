@@ -213,11 +213,11 @@ var NavigationPrompt = function (_React$Component) {
 
 
       this.state.unblock();
-      this._prevUserAction = 'CONFIRM';
 
       // Special handling for goBack
       if (action === 'goBack') {
         history.goBack();
+        this._prevUserAction = 'CONFIRM';
         // As native history.go(-1) exetues after this method has finished, need to update state asychronously
         // otherwise it will trigger navigateToNextLocation method again
         return window.setTimeout(function () {
@@ -240,6 +240,7 @@ var NavigationPrompt = function (_React$Component) {
         })); // FIXME?  Does history.listen need to be used instead, for async?
       }
       history[action](nextLocation);
+      this._prevUserAction = 'CONFIRM';
 
       this.setState(_extends({}, initState, {
         unblock: this.props.history.block(this.block)
