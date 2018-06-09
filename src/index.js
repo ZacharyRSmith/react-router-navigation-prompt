@@ -119,11 +119,11 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     const {history} = this.props;
 
     this.state.unblock();
-    this._prevUserAction = 'CONFIRM';
 
     // Special handling for goBack
     if (action === 'goBack') {
       history.goBack();
+      this._prevUserAction = 'CONFIRM';
       // As native history.go(-1) exetues after this method has finished, need to update state asychronously
       // otherwise it will trigger navigateToNextLocation method again
       return window.setTimeout(() => {
@@ -139,6 +139,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
 
     // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
     history[action](nextLocation);
+    this._prevUserAction = 'CONFIRM';
 
     this.setState({
       ...initState,
