@@ -121,6 +121,7 @@ var NavigationPrompt = function (_React$Component) {
   _inherits(NavigationPrompt, _React$Component);
 
   /*:: _prevUserAction: string; */
+  /*:: _isUnmounted: boolean; */
 
   function NavigationPrompt(props) {
     _classCallCheck(this, NavigationPrompt);
@@ -131,6 +132,7 @@ var NavigationPrompt = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (NavigationPrompt.__proto__ || Object.getPrototypeOf(NavigationPrompt)).call(this, props));
 
     _this._prevUserAction = '';
+    _this._isUnmounted = true;
 
     _this.block = _this.block.bind(_this);
     _this.onBeforeUnload = _this.onBeforeUnload.bind(_this);
@@ -145,6 +147,7 @@ var NavigationPrompt = function (_React$Component) {
   _createClass(NavigationPrompt, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      this._isUnmounted = false;
       if (!this.props.disableNative) {
         window.addEventListener('beforeunload', this.onBeforeUnload);
       }
@@ -170,6 +173,7 @@ var NavigationPrompt = function (_React$Component) {
       if (!this.props.disableNative) {
         window.removeEventListener('beforeunload', this.onBeforeUnload);
       }
+      this._isUnmounted = true;
     }
   }, {
     key: 'block',
@@ -187,12 +191,14 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'navigateToNextLocation',
     value: function navigateToNextLocation(cb) {
+      var _this2 = this;
+
       var _state = this.state,
           action = _state.action,
           nextLocation = _state.nextLocation;
 
       action = {
-        'POP': 'push',
+        'POP': 'goBack',
         'PUSH': 'push',
         'REPLACE': 'replace'
       }[action || 'PUSH'];
@@ -201,9 +207,26 @@ var NavigationPrompt = function (_React$Component) {
 
 
       this.state.unblock();
+      this._prevUserAction = 'CONFIRM';
+
+      // Special handling for goBack
+      if (action === 'goBack') {
+        history.goBack();
+        // As native history.go(-1) exetues after this method has finished, need to update state asychronously
+        // otherwise it will trigger navigateToNextLocation method again
+        return window.setTimeout(function () {
+          // Skip state update when component has been unmounted in meanwhile. Usually this is what happens.
+          if (!_this2._isUnmounted) {
+            _this2.setState(_extends({}, initState, {
+              unblock: _this2.props.history.block(_this2.block)
+            }));
+          }
+        }, 0);
+      }
+
       // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
       history[action](nextLocation);
-      this._prevUserAction = 'CONFIRM';
+
       this.setState(_extends({}, initState, {
         unblock: this.props.history.block(this.block)
       })); // FIXME?  Does history.listen need to be used instead, for async?
@@ -211,24 +234,24 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'onCancel',
     value: function onCancel() {
-      var _this2 = this;
+      var _this3 = this;
 
       (this.props.beforeCancel || function (cb) {
         cb();
       })(function () {
-        _this2._prevUserAction = 'CANCEL';
-        _this2.setState(_extends({}, initState));
+        _this3._prevUserAction = 'CANCEL';
+        _this3.setState(_extends({}, initState));
       });
     }
   }, {
     key: 'onConfirm',
     value: function onConfirm() {
-      var _this3 = this;
+      var _this4 = this;
 
       (this.props.beforeConfirm || function (cb) {
         cb();
       })(function () {
-        _this3.navigateToNextLocation(_this3.props.afterConfirm);
+        _this4.navigateToNextLocation(_this4.props.afterConfirm);
       });
     }
   }, {

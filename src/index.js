@@ -48,6 +48,7 @@ const initState = {
  */
 class NavigationPrompt extends React.Component<PropsT, StateT> {
   /*:: _prevUserAction: string; */
+  /*:: _isUnmounted: boolean; */
 
   constructor(props) {
     super(props);
@@ -56,6 +57,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     // See: See https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/9
     // I don't like making this an instance var,
     this._prevUserAction = '';
+    this._isUnmounted = true;
 
     (this:Object).block = this.block.bind(this);
     (this:Object).onBeforeUnload = this.onBeforeUnload.bind(this);
@@ -67,6 +69,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   componentDidMount() {
+    this._isUnmounted = false
     if (!this.props.disableNative) {
       window.addEventListener('beforeunload', this.onBeforeUnload);
     }
@@ -90,8 +93,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     if (!this.props.disableNative) {
       window.removeEventListener('beforeunload', this.onBeforeUnload);
     }
-    
-    this.isUnmounted = true
+    this._isUnmounted = true
   }
 
   block(nextLocation, action) {
@@ -117,26 +119,31 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     const {history} = this.props;
 
     this.state.unblock();
-    // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
-    
+    this._prevUserAction = 'CONFIRM';
+
+    // Special handling for goBack
     if (action === 'goBack') {
       history.goBack();
-    } else {
-      history[action](nextLocation);
+      // As native history.go(-1) exetues after this method has finished, need to update state asychronously
+      // otherwise it will trigger navigateToNextLocation method again
+      return window.setTimeout(() => {
+        // Skip state update when component has been unmounted in meanwhile. Usually this is what happens.
+        if (!this._isUnmounted) {
+          this.setState({
+            ...initState,
+            unblock: this.props.history.block(this.block)
+          });
+        }
+      }, 0);
     }
 
-    this._prevUserAction = 'CONFIRM';
-    
-    // This helps when using in goBack
-    window.setTimeout(() => {
-      // There is a change that component has been unmounted after navigation
-      if (!this.isUnmounted) {
-        this.setState({
-          ...initState,
-          unblock: this.props.history.block(this.block)
-        }); // FIXME?  Does history.listen need to be used instead, for async?
-      }
-    }, 0)
+    // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
+    history[action](nextLocation);
+
+    this.setState({
+      ...initState,
+      unblock: this.props.history.block(this.block)
+    }); // FIXME?  Does history.listen need to be used instead, for async?
   }
 
   onCancel() {
