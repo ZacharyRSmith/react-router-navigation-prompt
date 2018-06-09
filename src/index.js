@@ -49,6 +49,7 @@ const initState = {
 class NavigationPrompt extends React.Component<PropsT, StateT> {
   /*:: _prevUserAction: string; */
   /*:: _isMounted: bool; */
+  /*:: _isUnmounted: boolean; */
 
   constructor(props) {
     super(props);
@@ -57,6 +58,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     // See: See https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/9
     // I don't like making this an instance var,
     this._prevUserAction = '';
+    this._isUnmounted = true;
 
     // This component could be used from inside a page, and therefore could be
     // mounted/unmounted when the route changes.
@@ -72,6 +74,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   componentDidMount() {
+    this._isUnmounted = false
     if (!this.props.disableNative) {
       window.addEventListener('beforeunload', this.onBeforeUnload);
     }
@@ -122,20 +125,21 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
 
     this.state.unblock();
 
+    // Special handling for goBack
     if (action === 'goBack') {
       history.goBack();
       this._prevUserAction = 'CONFIRM';
-      // This helps when using in goBack
-      window.setTimeout(() => {
-        // There is a change that component has been unmounted after navigation
-        if (this.isMounted) {
+      // As native history.go(-1) exetues after this method has finished, need to update state asychronously
+      // otherwise it will trigger navigateToNextLocation method again
+      return window.setTimeout(() => {
+        // Skip state update when component has been unmounted in meanwhile. Usually this is what happens.
+        if (this._isMounted) {
           this.setState({
             ...initState,
             unblock: this.props.history.block(this.block)
-          }); // FIXME?  Does history.listen need to be used instead, for async?
+          });
         }
-      }, 0)
-      return
+      }, 0);
     }
 
     // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
