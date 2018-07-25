@@ -121,6 +121,7 @@ var NavigationPrompt = function (_React$Component) {
   _inherits(NavigationPrompt, _React$Component);
 
   /*:: _prevUserAction: string; */
+  /*:: _isMounted: bool; */
 
   function NavigationPrompt(props) {
     _classCallCheck(this, NavigationPrompt);
@@ -131,6 +132,10 @@ var NavigationPrompt = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (NavigationPrompt.__proto__ || Object.getPrototypeOf(NavigationPrompt)).call(this, props));
 
     _this._prevUserAction = '';
+
+    // This component could be used from inside a page, and therefore could be
+    // mounted/unmounted when the route changes.
+    _this._isMounted = true;
 
     _this.block = _this.block.bind(_this);
     _this.onBeforeUnload = _this.onBeforeUnload.bind(_this);
@@ -162,6 +167,7 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
+      this._isMounted = false;
       if (this._prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
         this._prevUserAction = '';
         this.props.afterConfirm();
@@ -202,11 +208,14 @@ var NavigationPrompt = function (_React$Component) {
 
       this.state.unblock();
       // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
-      history[action](nextLocation);
+      history[action](nextLocation); // could unmount at this point
       this._prevUserAction = 'CONFIRM';
-      this.setState(_extends({}, initState, {
-        unblock: this.props.history.block(this.block)
-      })); // FIXME?  Does history.listen need to be used instead, for async?
+      if (this._isMounted) {
+        // Just in case we unmounted on the route change
+        this.setState(_extends({}, initState, {
+          unblock: this.props.history.block(this.block)
+        })); // FIXME?  Does history.listen need to be used instead, for async?
+      }
     }
   }, {
     key: 'onCancel',
