@@ -48,6 +48,7 @@ const initState = {
  */
 class NavigationPrompt extends React.Component<PropsT, StateT> {
   /*:: _prevUserAction: string; */
+  /*:: _isMounted: bool; */
 
   constructor(props) {
     super(props);
@@ -56,6 +57,10 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     // See: See https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/9
     // I don't like making this an instance var,
     this._prevUserAction = '';
+
+    // This component could be used from inside a page, and therefore could be
+    // mounted/unmounted when the route changes.
+    this._isMounted = true;
 
     (this:Object).block = this.block.bind(this);
     (this:Object).onBeforeUnload = this.onBeforeUnload.bind(this);
@@ -82,6 +87,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   componentWillUnmount() {
+    this._isMounted = false;
     if (this._prevUserAction === 'CONFIRM' && typeof this.props.afterConfirm === 'function') {
       this._prevUserAction = '';
       this.props.afterConfirm();
@@ -116,12 +122,14 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
 
     this.state.unblock();
     // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
-    history[action](nextLocation);
+    history[action](nextLocation); // could unmount at this point
     this._prevUserAction = 'CONFIRM';
-    this.setState({
-      ...initState,
-      unblock: this.props.history.block(this.block)
-    }); // FIXME?  Does history.listen need to be used instead, for async?
+    if (this._isMounted) { // Just in case we unmounted on the route change
+      this.setState({
+        ...initState,
+        unblock: this.props.history.block(this.block)
+      }); // FIXME?  Does history.listen need to be used instead, for async?
+    }
   }
 
   onCancel() {
