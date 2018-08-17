@@ -14,7 +14,7 @@
 
 ## Overview
 
-Promps user to confirm navigation. A replacement component for the react-router `<Prompt/>`. Allows for more flexible dialogs.
+Promps user to confirm navigation. A replacement component for the react-router `<Prompt/>` (this still uses react-router to work). Allows for more flexible dialogs.
 
 Note: Navigation away from your site, reload, or closing tab/window will also prompt navigation confirmation when `<NavigationPrompt/>`'s `props.when` is truthy.  Usually, browsers handle this navigation UX themselves, leading to vanilla alert boxes.  Also, many browsers require users to interact with your site before confirming navigation away.
 
