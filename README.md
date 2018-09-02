@@ -16,43 +16,57 @@
 
 Promps user to confirm navigation. A replacement component for the react-router `<Prompt/>` (this still uses react-router to work). Allows for more flexible dialogs.
 
-Note: Navigation away from your site, reload, or closing tab/window will also prompt navigation confirmation when `<NavigationPrompt/>`'s `props.when` is truthy.  Usually, browsers handle this navigation UX themselves, leading to vanilla alert boxes.  Also, many browsers require users to interact with your site before confirming navigation away.
+Note: Navigation away from your site, reload, or closing tab/window will also prompt navigation confirmation when `<NavigationPrompt/>`'s `props.when` is truthy. Usually, browsers handle this navigation UX themselves, leading to vanilla alert boxes. Also, many browsers require users to interact with your site before confirming navigation away.
 
 Motivation: https://github.com/ReactTraining/react-router/issues/4635
 
 Adapted from: https://gist.github.com/bummzack/a586533607ece482475e0c211790dd50
+
+## Demo
+
+A visual example of `<Prompt />` vs the package in action:
+
+![demo-gif](https://media.giphy.com/media/2t9sbep1TtRTHF2YJD/giphy.gif)
+
+![demo-gif](https://media.giphy.com/media/oVkikQIhaZIzcEBK70/giphy.gif)
 
 ## Example Usage
 
 #### Simplest example:
 
 ```javascript
-import NavigationPrompt from 'react-router-navigation-prompt';
+import NavigationPrompt from "react-router-navigation-prompt";
 
-import ConfirmNavigationModal from './your-own-code';
+import ConfirmNavigationModal from "./your-own-code";
 
 <NavigationPrompt when={this.state.shouldConfirmNavigation}>
-  {({onConfirm, onCancel}) => (
-    <ConfirmNavigationModal when={true} onCancel={onCancel} onConfirm={onConfirm}/>
+  {({ onConfirm, onCancel }) => (
+    <ConfirmNavigationModal
+      when={true}
+      onCancel={onCancel}
+      onConfirm={onConfirm}
+    />
   )}
-</NavigationPrompt>
+</NavigationPrompt>;
 ```
 
 #### Complex example:
 
 ```javascript
-import NavigationPrompt from 'react-router-navigation-prompt';
+import NavigationPrompt from "react-router-navigation-prompt";
 
-import Modal from './your-own-code';
+import Modal from "./your-own-code";
 
 <NavigationPrompt
   beforeConfirm={this.cleanup}
   // Children will be rendered even if props.when is falsey and isActive is false:
   renderIfNotActive={true}
   // Confirm navigation if going to a path that does not start with current path:
-  when={(crntLocation, nextLocation) => !nextLocation || !nextLocation.pathname.startsWith(crntLocation.pathname)}
+  when={(crntLocation, nextLocation) =>
+    !nextLocation || !nextLocation.pathname.startsWith(crntLocation.pathname)
+  }
 >
-  {({isActive, onCancel, onConfirm}) => {
+  {({ isActive, onCancel, onConfirm }) => {
     if (isActive) {
       return (
         <Modal show={true}>
@@ -64,27 +78,23 @@ import Modal from './your-own-code';
         </Modal>
       );
     }
-    return (
-      <div>This is probably an anti-pattern but ya know...</div>
-    );
+    return <div>This is probably an anti-pattern but ya know...</div>;
   }}
-</NavigationPrompt>
+</NavigationPrompt>;
 ```
 
 ## API
 
-* `props`
-  * afterCancel?: Function,
-  * afterConfirm?: Function,
-  * beforeCancel?: Function,
-  * beforeConfirm?: Function,
-  * children: (data: {isActive: bool, onCancel: Function, onConfirm: Function}) => React$Element<*>,
-  * renderIfNotActive: bool,
-  * when: bool | (Location, ?Location) => bool,
-  * disableNative: bool,
-  // Added by react-router:
-  * match: Match,
-  * history: RouterHistory,
-  * location: Location,
-
-
+- `props`
+  - afterCancel?: Function,
+  - afterConfirm?: Function,
+  - beforeCancel?: Function,
+  - beforeConfirm?: Function,
+  - children: (data: {isActive: bool, onCancel: Function, onConfirm: Function}) => React$Element<\*>,
+  - renderIfNotActive: bool,
+  - when: bool | (Location, ?Location) => bool,
+  - disableNative: bool,
+    // Added by react-router:
+  - match: Match,
+  - history: RouterHistory,
+  - location: Location,
