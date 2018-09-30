@@ -179,7 +179,6 @@ var NavigationPrompt = function (_React$Component) {
       if (!this.props.disableNative) {
         window.removeEventListener('beforeunload', this.onBeforeUnload);
       }
-      this._isUnmounted = true;
     }
   }, {
     key: 'block',
@@ -222,7 +221,7 @@ var NavigationPrompt = function (_React$Component) {
         // otherwise it will trigger navigateToNextLocation method again
         return window.setTimeout(function () {
           // Skip state update when component has been unmounted in meanwhile. Usually this is what happens.
-          if (!_this2._isUnmounted) {
+          if (_this2._isMounted) {
             _this2.setState(_extends({}, initState, {
               unblock: _this2.props.history.block(_this2.block)
             }));
@@ -239,12 +238,6 @@ var NavigationPrompt = function (_React$Component) {
           unblock: this.props.history.block(this.block)
         })); // FIXME?  Does history.listen need to be used instead, for async?
       }
-      history[action](nextLocation);
-      this._prevUserAction = 'CONFIRM';
-
-      this.setState(_extends({}, initState, {
-        unblock: this.props.history.block(this.block)
-      })); // FIXME?  Does history.listen need to be used instead, for async?
     }
   }, {
     key: 'onCancel',
