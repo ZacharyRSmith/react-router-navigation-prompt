@@ -18,6 +18,7 @@ declare module 'react-router-navigation-prompt' {
     beforeConfirm?: () => void;
     renderIfNotActive?: boolean;
     disableNative?: boolean;
+    allowGoBack?: boolean;
   }
 
   interface NavigationPromptState {
