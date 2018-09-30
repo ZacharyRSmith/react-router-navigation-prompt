@@ -15,6 +15,7 @@ declare type PropsT = {
   renderIfNotActive: bool,
   when: bool | (Location, ?Location) => bool,
   disableNative: bool,
+  allowGoBack: bool,
 };
 declare type StateT = {
   action: ?HistoryAction,
@@ -49,7 +50,6 @@ const initState = {
 class NavigationPrompt extends React.Component<PropsT, StateT> {
   /*:: _prevUserAction: string; */
   /*:: _isMounted: bool; */
-  /*:: _isUnmounted: boolean; */
 
   constructor(props) {
     super(props);
@@ -58,7 +58,6 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     // See: See https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/9
     // I don't like making this an instance var,
     this._prevUserAction = '';
-    this._isUnmounted = true;
 
     // This component could be used from inside a page, and therefore could be
     // mounted/unmounted when the route changes.
@@ -74,7 +73,6 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   componentDidMount() {
-    this._isUnmounted = false
     if (!this.props.disableNative) {
       window.addEventListener('beforeunload', this.onBeforeUnload);
     }
@@ -116,7 +114,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   navigateToNextLocation(cb) {
     let {action, nextLocation} = this.state;
     action = {
-      'POP': 'goBack',
+      'POP': this.props.allowGoBack ? 'goBack' : 'push',
       'PUSH': 'push',
       'REPLACE': 'replace'
     }[action || 'PUSH'];

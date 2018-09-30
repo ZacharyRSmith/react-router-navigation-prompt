@@ -122,7 +122,6 @@ var NavigationPrompt = function (_React$Component) {
 
   /*:: _prevUserAction: string; */
   /*:: _isMounted: bool; */
-  /*:: _isUnmounted: boolean; */
 
   function NavigationPrompt(props) {
     _classCallCheck(this, NavigationPrompt);
@@ -133,7 +132,6 @@ var NavigationPrompt = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (NavigationPrompt.__proto__ || Object.getPrototypeOf(NavigationPrompt)).call(this, props));
 
     _this._prevUserAction = '';
-    _this._isUnmounted = true;
 
     // This component could be used from inside a page, and therefore could be
     // mounted/unmounted when the route changes.
@@ -152,7 +150,6 @@ var NavigationPrompt = function (_React$Component) {
   _createClass(NavigationPrompt, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this._isUnmounted = false;
       if (!this.props.disableNative) {
         window.addEventListener('beforeunload', this.onBeforeUnload);
       }
@@ -203,7 +200,7 @@ var NavigationPrompt = function (_React$Component) {
           nextLocation = _state.nextLocation;
 
       action = {
-        'POP': 'goBack',
+        'POP': this.props.useGoBackForPop ? 'goBack' : 'push',
         'PUSH': 'push',
         'REPLACE': 'replace'
       }[action || 'PUSH'];
