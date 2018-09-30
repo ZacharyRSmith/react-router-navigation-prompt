@@ -73,6 +73,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   componentDidMount() {
+    this._isUnmounted = false
     if (!this.props.disableNative) {
       window.addEventListener('beforeunload', this.onBeforeUnload);
     }
@@ -97,6 +98,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     if (!this.props.disableNative) {
       window.removeEventListener('beforeunload', this.onBeforeUnload);
     }
+    this._isUnmounted = true
   }
 
   block(nextLocation, action) {
