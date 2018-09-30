@@ -132,7 +132,10 @@ var NavigationPrompt = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (NavigationPrompt.__proto__ || Object.getPrototypeOf(NavigationPrompt)).call(this, props));
 
     _this._prevUserAction = '';
-    _this._isUnmounted = true;
+
+    // This component could be used from inside a page, and therefore could be
+    // mounted/unmounted when the route changes.
+    _this._isMounted = true;
 
     _this.block = _this.block.bind(_this);
     _this.onBeforeUnload = _this.onBeforeUnload.bind(_this);
@@ -147,7 +150,6 @@ var NavigationPrompt = function (_React$Component) {
   _createClass(NavigationPrompt, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      this._isUnmounted = false;
       if (!this.props.disableNative) {
         window.addEventListener('beforeunload', this.onBeforeUnload);
       }
@@ -174,7 +176,6 @@ var NavigationPrompt = function (_React$Component) {
       if (!this.props.disableNative) {
         window.removeEventListener('beforeunload', this.onBeforeUnload);
       }
-      this._isUnmounted = true;
     }
   }, {
     key: 'block',
@@ -199,7 +200,7 @@ var NavigationPrompt = function (_React$Component) {
           nextLocation = _state.nextLocation;
 
       action = {
-        'POP': this.props.useGoBackForPop ? 'goBack' : 'push',
+        'POP': this.props.allowGoBack ? 'goBack' : 'push',
         'PUSH': 'push',
         'REPLACE': 'replace'
       }[action || 'PUSH'];
