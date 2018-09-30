@@ -98,6 +98,7 @@ import Modal from "./your-own-code";
   - renderIfNotActive: bool,
   - when: bool | (Location, ?Location) => bool,
   - disableNative: bool,
+  - allowGoBack: bool (use _goBack_ method instead of _push_ when navigating back one or more items),
     // Added by react-router:
   - match: Match,
   - history: RouterHistory,

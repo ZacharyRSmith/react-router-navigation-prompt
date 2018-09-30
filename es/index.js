@@ -193,12 +193,14 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'navigateToNextLocation',
     value: function navigateToNextLocation(cb) {
+      var _this2 = this;
+
       var _state = this.state,
           action = _state.action,
           nextLocation = _state.nextLocation;
 
       action = {
-        'POP': 'push',
+        'POP': this.props.allowGoBack ? 'goBack' : 'push',
         'PUSH': 'push',
         'REPLACE': 'replace'
       }[action || 'PUSH'];
@@ -207,6 +209,23 @@ var NavigationPrompt = function (_React$Component) {
 
 
       this.state.unblock();
+
+      // Special handling for goBack
+      if (action === 'goBack') {
+        history.goBack();
+        this._prevUserAction = 'CONFIRM';
+        // As native history.go(-1) exetues after this method has finished, need to update state asychronously
+        // otherwise it will trigger navigateToNextLocation method again
+        return window.setTimeout(function () {
+          // Skip state update when component has been unmounted in meanwhile. Usually this is what happens.
+          if (_this2._isMounted) {
+            _this2.setState(_extends({}, initState, {
+              unblock: _this2.props.history.block(_this2.block)
+            }));
+          }
+        }, 25);
+      }
+
       // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
       history[action](nextLocation); // could unmount at this point
       this._prevUserAction = 'CONFIRM';
@@ -220,24 +239,24 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'onCancel',
     value: function onCancel() {
-      var _this2 = this;
+      var _this3 = this;
 
       (this.props.beforeCancel || function (cb) {
         cb();
       })(function () {
-        _this2._prevUserAction = 'CANCEL';
-        _this2.setState(_extends({}, initState));
+        _this3._prevUserAction = 'CANCEL';
+        _this3.setState(_extends({}, initState));
       });
     }
   }, {
     key: 'onConfirm',
     value: function onConfirm() {
-      var _this3 = this;
+      var _this4 = this;
 
       (this.props.beforeConfirm || function (cb) {
         cb();
       })(function () {
-        _this3.navigateToNextLocation(_this3.props.afterConfirm);
+        _this4.navigateToNextLocation(_this4.props.afterConfirm);
       });
     }
   }, {
