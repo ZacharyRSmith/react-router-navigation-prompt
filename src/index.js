@@ -137,8 +137,8 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
             unblock: this.props.history.block(this.block)
           });
         }
-      // Delay of 50ms should be enough to allow navigating back and unmount
-      }, 50);
+      // Delay of 100ms should be enough to allow navigating back and unmount
+      }, 100);
     }
 
     // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
