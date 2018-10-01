@@ -223,7 +223,8 @@ var NavigationPrompt = function (_React$Component) {
               unblock: _this2.props.history.block(_this2.block)
             }));
           }
-        }, 25);
+          // Delay of 50ms should be enough to allow navigating back and unmount
+        }, 50);
       }
 
       // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
