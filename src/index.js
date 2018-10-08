@@ -122,28 +122,27 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     const {history} = this.props;
 
     this.state.unblock();
-
-    // Special handling for goBack
+    this._prevUserAction = 'CONFIRM';
     if (action === 'goBack') {
-      history.goBack();
-      this._prevUserAction = 'CONFIRM';
-      // As native history.go(-1) exetues after this method has finished, need to update state asychronously
-      // otherwise it will trigger navigateToNextLocation method again
-      return window.setTimeout(() => {
-        // Skip state update when component has been unmounted in meanwhile. Usually this is what happens.
-        if (this._isMounted) {
+      // Because there is asynchronous time between calling history.goBack()
+      // and history actually changing, we need to set up this temporary callback
+      // -- if we tried to run this synchronously after calling history.goBack(),
+      // then navigateToNextLocation would be triggered again.
+      const unlisten = history.listen(() => {
+        unlisten();
+        if (this._isMounted) { // Just in case we unmounted on the route change
           this.setState({
             ...initState,
-            unblock: this.props.history.block(this.block)
+            unblock: history.block(this.block)
           });
         }
-      // Delay of 100ms should be enough to allow navigating back and unmount
-      }, 100);
+      });
+      history.goBack();
+      return
     }
 
     // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
     history[action](nextLocation); // could unmount at this point
-    this._prevUserAction = 'CONFIRM';
     if (this._isMounted) { // Just in case we unmounted on the route change
       this.setState({
         ...initState,
