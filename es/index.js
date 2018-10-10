@@ -193,12 +193,14 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'navigateToNextLocation',
     value: function navigateToNextLocation(cb) {
+      var _this2 = this;
+
       var _state = this.state,
           action = _state.action,
           nextLocation = _state.nextLocation;
 
       action = {
-        'POP': 'push',
+        'POP': this.props.allowGoBack ? 'goBack' : 'push',
         'PUSH': 'push',
         'REPLACE': 'replace'
       }[action || 'PUSH'];
@@ -207,9 +209,27 @@ var NavigationPrompt = function (_React$Component) {
 
 
       this.state.unblock();
+      this._prevUserAction = 'CONFIRM';
+      if (action === 'goBack') {
+        // Because there is asynchronous time between calling history.goBack()
+        // and history actually changing, we need to set up this temporary callback
+        // -- if we tried to run this synchronously after calling history.goBack(),
+        // then navigateToNextLocation would be triggered again.
+        var unlisten = history.listen(function () {
+          unlisten();
+          if (_this2._isMounted) {
+            // Just in case we unmounted on the route change
+            _this2.setState(_extends({}, initState, {
+              unblock: history.block(_this2.block)
+            }));
+          }
+        });
+        history.goBack();
+        return;
+      }
+
       // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
       history[action](nextLocation); // could unmount at this point
-      this._prevUserAction = 'CONFIRM';
       if (this._isMounted) {
         // Just in case we unmounted on the route change
         this.setState(_extends({}, initState, {
@@ -220,24 +240,24 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'onCancel',
     value: function onCancel() {
-      var _this2 = this;
+      var _this3 = this;
 
       (this.props.beforeCancel || function (cb) {
         cb();
       })(function () {
-        _this2._prevUserAction = 'CANCEL';
-        _this2.setState(_extends({}, initState));
+        _this3._prevUserAction = 'CANCEL';
+        _this3.setState(_extends({}, initState));
       });
     }
   }, {
     key: 'onConfirm',
     value: function onConfirm() {
-      var _this3 = this;
+      var _this4 = this;
 
       (this.props.beforeConfirm || function (cb) {
         cb();
       })(function () {
-        _this3.navigateToNextLocation(_this3.props.afterConfirm);
+        _this4.navigateToNextLocation(_this4.props.afterConfirm);
       });
     }
   }, {

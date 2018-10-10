@@ -15,6 +15,7 @@ declare type PropsT = {
   renderIfNotActive: bool,
   when: bool | (Location, ?Location) => bool,
   disableNative: bool,
+  allowGoBack: bool,
 };
 declare type StateT = {
   action: ?HistoryAction,
@@ -113,7 +114,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   navigateToNextLocation(cb) {
     let {action, nextLocation} = this.state;
     action = {
-      'POP': 'push',
+      'POP': this.props.allowGoBack ? 'goBack' : 'push',
       'PUSH': 'push',
       'REPLACE': 'replace'
     }[action || 'PUSH'];
@@ -121,9 +122,27 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     const {history} = this.props;
 
     this.state.unblock();
+    this._prevUserAction = 'CONFIRM';
+    if (action === 'goBack') {
+      // Because there is asynchronous time between calling history.goBack()
+      // and history actually changing, we need to set up this temporary callback
+      // -- if we tried to run this synchronously after calling history.goBack(),
+      // then navigateToNextLocation would be triggered again.
+      const unlisten = history.listen(() => {
+        unlisten();
+        if (this._isMounted) { // Just in case we unmounted on the route change
+          this.setState({
+            ...initState,
+            unblock: history.block(this.block)
+          });
+        }
+      });
+      history.goBack();
+      return;
+    }
+
     // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
     history[action](nextLocation); // could unmount at this point
-    this._prevUserAction = 'CONFIRM';
     if (this._isMounted) { // Just in case we unmounted on the route change
       this.setState({
         ...initState,
