@@ -13,6 +13,7 @@ export interface NavigationPromptProps extends RouteComponentProps<any> {
   when: boolean | ((currentLocation: H.Location, nextLocation?: H.Location) => boolean);
   afterCancel?: () => void;
   afterConfirm?: () => void;
+  allowGoBack?: boolean;
   beforeCancel?: () => void;
   beforeConfirm?: () => void;
   renderIfNotActive?: boolean;
