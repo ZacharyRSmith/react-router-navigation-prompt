@@ -40,4 +40,4 @@ interface NavigationPromptWithRouter extends React.Component<NavigationPromptPro
 }
 
 // This is for the withRouter HOC being used as the default export.
-export default function NavigationPrompt(): React.Component<Omit<NavigationPromptProps, keyof RouteComponentProps<any>>>;
+export default class NavigationPrompt extends React.Component<Omit<NavigationPromptProps, keyof RouteComponentProps<any>>> {};
