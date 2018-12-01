@@ -225,16 +225,15 @@ var NavigationPrompt = function (_React$Component) {
           }
         });
         history.goBack();
-        return;
-      }
-
-      // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
-      history[action](nextLocation); // could unmount at this point
-      if (this._isMounted) {
-        // Just in case we unmounted on the route change
-        this.setState(_extends({}, initState, {
-          unblock: this.props.history.block(this.block)
-        })); // FIXME?  Does history.listen need to be used instead, for async?
+      } else {
+        // $FlowFixMe history.replace()'s type expects LocationShape even though it works with Location.
+        history[action](nextLocation); // could unmount at this point
+        if (this._isMounted) {
+          // Just in case we unmounted on the route change
+          this.setState(_extends({}, initState, {
+            unblock: this.props.history.block(this.block)
+          })); // FIXME?  Does history.listen need to be used instead, for async?
+        }
       }
     }
   }, {
