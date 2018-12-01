@@ -10,7 +10,8 @@
     "prepare": "npm run lint; npm run flow; npm run build",
     "test": "concurrently -k \"npm run test-server\" \"npm run testcafe\"",
     "test-server": "webpack-dev-server --config ./test/webpack.config.js",
-    "testcafe": "testcafe chrome test/index.js"
+    "testcafe": "testcafe chrome test/index.js",
+    "typescript": "tsc --noEmit ./types/index.d.ts"
   },
   "repository": {
     "type": "git",
