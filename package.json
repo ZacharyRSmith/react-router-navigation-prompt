@@ -7,7 +7,7 @@
     "flow": "flow",
     "flow-typed": "flow-typed",
     "lint": "eslint --ext .js --fix src/",
-    "prepare": "npm run lint; npm run flow; npm run build",
+    "prepare": "npm run lint; npm run flow; npm run typescript; npm run build",
     "test": "concurrently -k \"npm run test-server\" \"npm run testcafe\"",
     "test-server": "webpack-dev-server --config ./test/webpack.config.js",
     "testcafe": "testcafe chrome test/index.js",
