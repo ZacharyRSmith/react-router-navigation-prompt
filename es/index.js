@@ -143,7 +143,7 @@ var NavigationPrompt = function (_React$Component) {
     _this.onConfirm = _this.onConfirm.bind(_this);
     _this.when = _this.when.bind(_this);
 
-    _this.state = _extends({}, initState, { unblock: null /* unblock will be set in componentDidMount */ });
+    _this.state = _extends({}, initState, { unblock: function unblock() {} /* unblock will be set in componentDidMount */ });
     return _this;
   }
 
