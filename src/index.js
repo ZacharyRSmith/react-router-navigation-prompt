@@ -69,13 +69,15 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     (this:Object).onConfirm = this.onConfirm.bind(this);
     (this:Object).when = this.when.bind(this);
 
-    this.state = {...initState, unblock: props.history.block(this.block)};
+    this.state = {...initState};
   }
 
   componentDidMount() {
     if (!this.props.disableNative) {
       window.addEventListener('beforeunload', this.onBeforeUnload);
     }
+
+    this.setState({unblock: this.props.history.block(this.block)});
   }
 
   componentDidUpdate(prevProps, prevState) {
