@@ -62,7 +62,7 @@ import NavigationPrompt from "react-router-navigation-prompt";
 import Modal from "./your-own-code";
 
 <NavigationPrompt
-  beforeConfirm={this.cleanup}
+  beforeConfirm={(clb)=>this.cleanup(clb)} //call the callback function when finished cleaning up
   // Children will be rendered even if props.when is falsey and isActive is false:
   renderIfNotActive={true}
   // Confirm navigation if going to a path that does not start with current path:
