@@ -20,7 +20,7 @@ Promps user to confirm navigation. A replacement component for the react-router 
 
 Note: Currently tested using only react-router's `BrowserHistory`. `HashHistory` has issues: https://github.com/ZacharyRSmith/react-router-navigation-prompt/issues/36
 
-Note: Navigation away from your site, reload, or closing tab/window will also prompt navigation confirmation when `<NavigationPrompt/>`'s `props.when` is truthy. Usually, browsers handle this navigation UX themselves, leading to vanilla alert boxes. Also, many browsers require users to interact with your site before confirming navigation away.
+Note: Navigation away from your site, reload, or closing tab/window will also prompt navigation confirmation when `<NavigationPrompt/>`'s `props.when` is truthy. However, for security concerns browsers usually handle this navigation UX themselves, leading to vanilla alert boxes. Also, many browsers require users to interact with your site before confirming navigation away.
 
 Motivation: https://github.com/ReactTraining/react-router/issues/4635
 
