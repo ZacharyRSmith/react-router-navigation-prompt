@@ -1,4 +1,3 @@
-/* @flow */
 import React, { Component } from 'react';
 import { Divider, Modal } from 'react-bootstrap';
 // import { Route } from 'react-router';
