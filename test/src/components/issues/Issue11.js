@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
-import {Route} from 'react-router';
-import {Link} from 'react-router-dom';
+/* @flow */
+import React, { Component } from 'react';
+import { Route } from 'react-router';
+import { Link } from 'react-router-dom';
 import NavigationPrompt from '../../../..';
 
 class WithPrompt extends Component {
@@ -56,8 +57,8 @@ class Issue11 extends Component {
         <div className="was-after-confirm-called">{String(this.state.wasAfterConfirmCalled)}</div>
         <Route path="/issues/11/with-prompt" render={() => (
           <WithPrompt
-            handleAfterCancel={() => this.setState({wasAfterCancelCalled: true})}
-            handleAfterConfirm={() => this.setState({wasAfterConfirmCalled: true})}
+            handleAfterCancel={() => this.setState({ wasAfterCancelCalled: true })}
+            handleAfterConfirm={() => this.setState({ wasAfterConfirmCalled: true })}
           />
         )}/>
         <Route path="/issues/11/without-prompt" component={WithoutPrompt}/>

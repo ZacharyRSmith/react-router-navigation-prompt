@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
-import {Route} from 'react-router';
-import {Link} from 'react-router-dom';
+/* @flow */
+import React, { Component } from 'react';
+import { Route } from 'react-router';
+import { Link } from 'react-router-dom';
 import NavigationPrompt from '../../../..';
 
 class Container extends Component {

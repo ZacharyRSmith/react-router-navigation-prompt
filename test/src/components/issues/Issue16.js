@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
-import {Divider, Modal} from 'react-bootstrap';
+/* @flow */
+import React, { Component } from 'react';
+import { Divider, Modal } from 'react-bootstrap';
 // import { Route } from 'react-router';
 // import { Link } from 'react-router-dom';
 import NavigationPrompt from '../../../..';
@@ -15,8 +16,8 @@ class ConfirmNavigationModal extends Component {
 
             <br/>
             <div>
-              <button style={{borderRadius: '3px'}} onClick={this.props.onCancel}>cancel</button>
-              <button style={{borderRadius: '3px'}} onClick={this.props.onConfirm}>confirm</button>
+              <button style={{borderRadius:"3px"}} onClick={this.props.onCancel}>cancel</button>
+              <button style={{borderRadius:"3px"}} onClick={this.props.onConfirm}>confirm</button>
             </div>
           </Modal.Body>
         </Modal.Dialog>
@@ -76,7 +77,7 @@ class Container extends Component {
   }
 
   dirtify() {
-    this.setState(() => ({dirty: true}));
+    this.setState(() => ({ dirty: true }));
   }
 
   render() {
