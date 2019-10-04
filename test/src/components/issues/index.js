@@ -1,7 +1,6 @@
-/* @flow */
-import React, { Component } from 'react';
-import { Route, Switch, withRouter } from 'react-router';
-import { BrowserRouter, Link } from 'react-router-dom';
+import React, {Component} from 'react';
+import {Route, Switch, withRouter} from 'react-router';
+import {BrowserRouter, Link} from 'react-router-dom';
 import Issue3 from './Issue3';
 import Issue4 from './Issue4';
 import Issue11 from './Issue11';

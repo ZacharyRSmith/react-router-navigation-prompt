@@ -1,7 +1,6 @@
-/* @flow */
-import React, { Component } from 'react';
-import { Route, Switch } from 'react-router';
-import { BrowserRouter, Link } from 'react-router-dom';
+import React, {Component} from 'react';
+import {Route, Switch} from 'react-router';
+import {BrowserRouter, Link} from 'react-router-dom';
 import NavigationPrompt from '../../../..';
 
 class PageA extends Component {

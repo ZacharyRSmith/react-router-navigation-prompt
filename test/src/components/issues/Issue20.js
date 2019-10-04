@@ -1,7 +1,6 @@
-/* @flow */
-import React, { Component } from 'react';
-import { Route, Switch } from 'react-router';
-import { Link } from 'react-router-dom';
+import React, {Component} from 'react';
+import {Route, Switch} from 'react-router';
+import {Link} from 'react-router-dom';
 import NavigationPrompt from '../../../..';
 
 class Issue20 extends Component {
@@ -9,7 +8,7 @@ class Issue20 extends Component {
         return (
             <div>
                 <NavigationPrompt when={true}>
-                    {({ onConfirm, onCancel }) => (
+                    {({onConfirm, onCancel}) => (
                         <div>
                             <button className="nav-confirm" onClick={onConfirm}>Confirm</button>
                             <button className="nav-cancel" onClick={onCancel}>Cancel</button>
