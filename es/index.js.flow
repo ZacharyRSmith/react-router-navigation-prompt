@@ -12,10 +12,10 @@ declare type PropsT = {
   match: Match,
   history: RouterHistory,
   location: Location,
-  renderIfNotActive: bool,
+  renderIfNotActive?: bool,
   when: bool | (Location, ?Location) => bool,
-  disableNative: bool,
-  allowGoBack: bool,
+  disableNative?: bool,
+  allowGoBack?: bool,
 };
 declare type StateT = {
   action: ?HistoryAction,

@@ -1,4 +1,3 @@
-/* @flow */
 import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router';
 import { BrowserRouter, Link } from 'react-router-dom';
