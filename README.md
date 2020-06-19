@@ -18,9 +18,9 @@
 
 Promps user to confirm navigation. A replacement component for the react-router `<Prompt/>` (this still uses react-router to work). Allows for more flexible dialogs.
 
-Note: Currently tested using only react-router's `BrowserHistory`. `HashHistory` has issues: https://github.com/ZacharyRSmith/react-router-navigation-prompt/issues/36
+**Note: Currently tested using only react-router's `BrowserHistory`. `HashHistory` has issues: https://github.com/ZacharyRSmith/react-router-navigation-prompt/issues/36**
 
-Note: Navigation away from your site, reload, or closing tab/window will also prompt navigation confirmation when `<NavigationPrompt/>`'s `props.when` is truthy. However, for security concerns browsers usually handle this navigation UX themselves, leading to vanilla alert boxes. Also, many browsers require users to interact with your site before confirming navigation away.
+**Note: Navigation away from your site, reload, or closing tab/window will also prompt navigation confirmation when `<NavigationPrompt/>`'s `props.when` is truthy. However, for security concerns browsers usually handle this navigation UX themselves, leading to vanilla alert boxes. Also, many browsers require users to interact with your site before confirming navigation away.**
 
 Motivation: https://github.com/ReactTraining/react-router/issues/4635
 
@@ -28,13 +28,13 @@ Adapted from: https://gist.github.com/bummzack/a586533607ece482475e0c211790dd50
 
 ## Demo
 
-Below is a gif of `<Prompt />` and a gif of `<NavigationPrompt />`, with links to sandboxes to try it yourself:
+Below is a gif of `<Prompt />` and a gif of `<NavigationPrompt />`, with links to sandboxes to try them yourself:
 
-This gif shows `<Prompt />`, which you can try [here](https://codesandbox.io/s/sleepy-dubinsky-3yc4k?file=/src/index.js)
+This gif shows react-router's `<Prompt />`, which relies on the browser's alert boxes. You can try it [here](https://codesandbox.io/s/sleepy-dubinsky-3yc4k?file=/src/index.js)
 
 ![demo 1 gif](https://media.giphy.com/media/2t9sbep1TtRTHF2YJD/giphy.gif)
 
-This gif shows `<NavigationPrompt />`, which you can try [here](https://9q3wn56zrp.codesandbox.io)
+This gif shows `<NavigationPrompt />`, which enables custom dialogs _except when the browser requires a vanilla alert box for security reasons_. You can try it [here](https://9q3wn56zrp.codesandbox.io)
 
 ![demo 2 gif](https://media.giphy.com/media/oVkikQIhaZIzcEBK70/giphy.gif)
 
