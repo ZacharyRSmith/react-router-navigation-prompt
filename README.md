@@ -30,9 +30,15 @@ Adapted from: https://gist.github.com/bummzack/a586533607ece482475e0c211790dd50
 
 A visual example of `<Prompt />` vs the package in action:
 
-![demo-gif](https://media.giphy.com/media/2t9sbep1TtRTHF2YJD/giphy.gif)
+![demo 1 gif](https://media.giphy.com/media/2t9sbep1TtRTHF2YJD/giphy.gif)
 
-![demo-gif](https://media.giphy.com/media/oVkikQIhaZIzcEBK70/giphy.gif)
+[Try demo 1](https://oq5rrjqjx9.codesandbox.io)
+
+![demo 2 gif](https://media.giphy.com/media/oVkikQIhaZIzcEBK70/giphy.gif)
+
+[Try demo 2](https://9q3wn56zrp.codesandbox.io)
+
+
 
 ## Example Usage
 
