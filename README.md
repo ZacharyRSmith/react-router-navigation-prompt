@@ -28,17 +28,15 @@ Adapted from: https://gist.github.com/bummzack/a586533607ece482475e0c211790dd50
 
 ## Demo
 
-A visual example of `<Prompt />` vs the package in action:
+Below is a gif of `<Prompt />` and a gif of `<NavigationPrompt />`, with links to sandboxes to try it yourself:
+
+This gif shows `<Prompt />`, which you can try [here](https://codesandbox.io/s/sleepy-dubinsky-3yc4k?file=/src/index.js)
 
 ![demo 1 gif](https://media.giphy.com/media/2t9sbep1TtRTHF2YJD/giphy.gif)
 
-[Try demo 1](https://oq5rrjqjx9.codesandbox.io)
+This gif shows `<NavigationPrompt />`, which you can try [here](https://9q3wn56zrp.codesandbox.io)
 
 ![demo 2 gif](https://media.giphy.com/media/oVkikQIhaZIzcEBK70/giphy.gif)
-
-[Try demo 2](https://9q3wn56zrp.codesandbox.io)
-
-
 
 ## Example Usage
 
