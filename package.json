@@ -36,8 +36,8 @@
   "typings": "types/index.d.ts",
   "homepage": "https://github.com/ZacharyRSmith/react-router-navigation-prompt#readme",
   "peerDependencies": {
-    "react": ">= 15",
-    "react-router-dom": "4.x - 5"
+    "react": ">=15",
+    "react-router-dom": ">=4.x"
   },
   "devDependencies": {
     "@types/react": "^16.4.16",
