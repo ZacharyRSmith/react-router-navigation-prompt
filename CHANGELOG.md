@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.8.12] - 2020-06-19
+### Changed
+- Enhanced README.md
+
 ## [1.8.11] - 2020-04-16
 ### Fixed
 - security fix: build(deps): bump https-proxy-agent from 2.2.1 to 2.2.4
