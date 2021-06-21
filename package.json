@@ -1,6 +1,6 @@
 {
   "name": "react-router-navigation-prompt",
-  "version": "1.8.13",
+  "version": "1.8.14",
   "description": "A replacement component for the react-router `<Prompt/>`. Allows for more flexible dialogs.",
   "scripts": {
     "build": "webpack",
