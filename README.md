@@ -16,11 +16,15 @@
 
 ## Overview
 
-Promps user to confirm navigation. A replacement component for the react-router `<Prompt/>` (this still uses react-router to work). Allows for more flexible dialogs.
+Prompts user to confirm navigation. A replacement component for the react-router `<Prompt/>` (this still uses react-router to work). Allows for more flexible dialogs.
 
 **Note: Currently tested using only react-router's `BrowserHistory`. `HashHistory` has issues: https://github.com/ZacharyRSmith/react-router-navigation-prompt/issues/36**
 
 **Note: Navigation away from your site, reload, or closing tab/window will also prompt navigation confirmation when `<NavigationPrompt/>`'s `props.when` is truthy. However, for security concerns browsers usually handle this navigation UX themselves, leading to vanilla alert boxes. Also, many browsers require users to interact with your site before confirming navigation away.**
+
+**Note: If you pass a function to props.when, then make sure to check if nextLocation is defined before trying to use it.**
+
+**Note: Just like react-router's `<Prompt/>`, this component does not work with multiple `BrowserHistory`s: https://github.com/ZacharyRSmith/react-router-navigation-prompt/issues/77 **
 
 Motivation: https://github.com/ReactTraining/react-router/issues/4635
 
