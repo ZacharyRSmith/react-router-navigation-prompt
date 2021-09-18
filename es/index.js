@@ -182,7 +182,7 @@ var NavigationPrompt = function (_React$Component) {
   }, {
     key: 'block',
     value: function block(nextLocation, action) {
-      var result = this.when(nextLocation);
+      var result = this.when(nextLocation, action);
       if (result) {
         this.setState({
           action: action,
@@ -271,9 +271,9 @@ var NavigationPrompt = function (_React$Component) {
     }
   }, {
     key: 'when',
-    value: function when(nextLocation) {
+    value: function when(nextLocation, action) {
       if (typeof this.props.when === 'function') {
-        return this.props.when(this.props.location, nextLocation);
+        return this.props.when(this.props.location, nextLocation, action);
       } else {
         return this.props.when;
       }
