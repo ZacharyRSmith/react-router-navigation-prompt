@@ -10,7 +10,7 @@ export interface ChildData {
 
 export interface NavigationPromptProps extends RouteComponentProps<any> {
   children: (data: ChildData) => React.ReactNode;
-  when: boolean | ((currentLocation: H.Location, nextLocation?: H.Location) => boolean);
+  when: boolean | ((currentLocation: H.Location, nextLocation?: H.Location, action?: H.Action) => boolean);
   afterCancel?: () => void;
   afterConfirm?: () => void;
   allowGoBack?: boolean;
@@ -36,7 +36,7 @@ interface NavigationPromptWithRouter extends React.Component<NavigationPromptPro
   onCancel(): void;
   onConfirm(): void;
   onBeforeUnload(e: any): string
-  when(nextLocation?: H.Location): boolean;
+  when(nextLocation?: H.Location, action?: H.Action): boolean;
 }
 
 // This is for the withRouter HOC being used as the default export.
