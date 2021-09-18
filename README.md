@@ -22,7 +22,7 @@ Prompts user to confirm navigation. A replacement component for the react-router
 
 **Note: Navigation away from your site, reload, or closing tab/window will also prompt navigation confirmation when `<NavigationPrompt/>`'s `props.when` is truthy. However, for security concerns browsers usually handle this navigation UX themselves, leading to vanilla alert boxes. Also, many browsers require users to interact with your site before confirming navigation away.**
 
-**Note: If you pass a function to props.when, then make sure to check if nextLocation is defined before trying to use it.**
+**Note: If you pass a function to `props.when`, then make sure to check if `nextLocation` and `action` are defined before trying to use them.**
 
 **Note: Just like react-router's `<Prompt/>`, this component does not work with multiple `BrowserHistory`s: https://github.com/ZacharyRSmith/react-router-navigation-prompt/issues/77 **
 
@@ -74,7 +74,7 @@ import Modal from "./your-own-code";
   // Children will be rendered even if props.when is falsey and isActive is false:
   renderIfNotActive={true}
   // Confirm navigation if going to a path that does not start with current path:
-  when={(crntLocation, nextLocation) =>
+  when={(crntLocation, nextLocation, _action) =>
     !nextLocation || !nextLocation.pathname.startsWith(crntLocation.pathname)
   }
 >
@@ -105,7 +105,7 @@ import Modal from "./your-own-code";
   - beforeConfirm?: Function,
   - children: (data: {isActive: bool, onCancel: Function, onConfirm: Function}) => React$Element<\*>,
   - renderIfNotActive: bool,
-  - when: bool | (Location, ?Location) => bool,
+  - when: bool | (Location, ?Location, ?HistoryAction) => bool,
   - disableNative: bool,
     // Added by react-router:
   - match: Match,

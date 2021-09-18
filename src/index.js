@@ -13,7 +13,7 @@ declare type PropsT = {
   history: RouterHistory,
   location: Location,
   renderIfNotActive?: bool,
-  when: bool | (Location, ?Location) => bool,
+  when: bool | (Location, ?Location, ?HistoryAction) => bool,
   disableNative?: bool,
   allowGoBack?: bool,
 };
@@ -102,7 +102,7 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
   }
 
   block(nextLocation, action) {
-    const result = this.when(nextLocation);
+    const result = this.when(nextLocation, action);
     if (result) {
       this.setState({
         action,
@@ -176,9 +176,9 @@ class NavigationPrompt extends React.Component<PropsT, StateT> {
     return msg;
   }
 
-  when(nextLocation?: Location) {
+  when(nextLocation?: Location, action?: HistoryAction) {
     if (typeof this.props.when === 'function') {
-      return this.props.when(this.props.location, nextLocation);
+      return this.props.when(this.props.location, nextLocation, action);
     } else {
       return this.props.when;
     }
