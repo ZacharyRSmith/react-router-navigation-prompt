@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.9.2] - 2022-02-10
+### Fixed
+- security fix: Updated package-lock.json and yarn.lock. Read more: https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/82
+
 ## [1.9.1] - 2021-09-18
 ### Fixed
-- security fix: Updated package-lock.json and yarn.lock. Read more: https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/8
+- security fix: Updated package-lock.json and yarn.lock. Read more: https://github.com/ZacharyRSmith/react-router-navigation-prompt/pull/80
 
 ## [1.9.0] - 2021-09-18
 ### Added
