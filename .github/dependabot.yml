@@ -1,0 +1,11 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+
+    # Always increase the version requirement
+    # to match the new version.
+    # From: https://stackoverflow.com/questions/60201543/dependabot-only-updates-lock-file
+    versioning-strategy: increase
