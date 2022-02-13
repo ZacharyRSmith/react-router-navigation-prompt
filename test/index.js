@@ -1,6 +1,6 @@
 import { Selector } from 'testcafe';
 
-const baseURL = 'http://localhost:8081';
+const baseURL = 'http://localhost:8080';
 
 fixture `NavigationPrompt`
   .page `${baseURL}`;
