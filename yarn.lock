@@ -379,14 +379,14 @@
     "json-schema-traverse" "^0.3.0"
 
 "ajv@^6.0.0", "ajv@^6.1.0":
-  "integrity" "sha1-06/3jpJ3VJdx2vAWTP9ISCt1T8Y="
-  "resolved" "https://registry.npmjs.org/ajv/-/ajv-6.4.0.tgz"
-  "version" "6.4.0"
+  "integrity" "sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g=="
+  "resolved" "https://registry.npmjs.org/ajv/-/ajv-6.12.6.tgz"
+  "version" "6.12.6"
   dependencies:
-    "fast-deep-equal" "^1.0.0"
+    "fast-deep-equal" "^3.1.1"
     "fast-json-stable-stringify" "^2.0.0"
-    "json-schema-traverse" "^0.3.0"
-    "uri-js" "^3.0.2"
+    "json-schema-traverse" "^0.4.1"
+    "uri-js" "^4.2.2"
 
 "ajv@^6.10.2":
   "integrity" "sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g=="
@@ -7290,13 +7290,6 @@
   "integrity" "sha512-aZwGpamFO61g3OlfT7OQCHqhGnW43ieH9WZeP7QxN/G/jS4jfqUkZxoryvJgVPEcrl5NL/ggHsSmLMHuH64Lhg=="
   "resolved" "https://registry.npmjs.org/upath/-/upath-1.2.0.tgz"
   "version" "1.2.0"
-
-"uri-js@^3.0.2":
-  "integrity" "sha1-+QuFhQf4HepNz7s8TD2/orVX+qo="
-  "resolved" "https://registry.npmjs.org/uri-js/-/uri-js-3.0.2.tgz"
-  "version" "3.0.2"
-  dependencies:
-    "punycode" "^2.1.0"
 
 "uri-js@^4.2.2":
   "integrity" "sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg=="
