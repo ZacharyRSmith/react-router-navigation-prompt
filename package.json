@@ -66,6 +66,6 @@
     "testcafe": "^1.18.3",
     "typescript": "^3.1.1",
     "webpack": "^5.68.0",
-    "webpack-dev-server": "^4.7.4"
+    "webpack-dev-server": "^4.11.0"
   }
 }
